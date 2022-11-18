@@ -43,6 +43,7 @@ fn main() {
         }))
         .add_startup_system(setup)
         .add_system(camera_movement)
+        .add_system(keyboard_input)
         .add_system(apply_camera_position)
         .add_system(bevy::window::close_on_esc)
         .run();
@@ -110,6 +111,29 @@ pub fn apply_camera_position(
                 look_at_transform.translation.z + distance * (rot_y.cos() * rot_x.cos()),
             )
             .looking_at(look_at_transform.translation, Vec3::Y);
+        }
+    }
+}
+
+pub fn keyboard_input(
+    keys: Res<Input<KeyCode>>,
+    camera_query: Query<&CameraController>,
+    mut entity_position_query: Query<&mut Transform, Without<CameraController>>,
+) {
+    if keys.pressed(KeyCode::W) {
+        if let Ok(camera_controller) = camera_query.get_single() {
+            if let Ok(mut look_at_transform) = entity_position_query.get_mut(camera_controller.lock_entity) {
+                let direction = look_at_transform.translation + Vec3::new(camera_controller.rotation_y.sin(), 0.0, camera_controller.rotation_y.cos());
+                look_at_transform.look_at(direction, Vec3::Y);
+            }
+        }
+    }
+    if keys.pressed(KeyCode::S) {
+        if let Ok(camera_controller) = camera_query.get_single() {
+            if let Ok(mut look_at_transform) = entity_position_query.get_mut(camera_controller.lock_entity) {
+                let direction = look_at_transform.translation - Vec3::new(camera_controller.rotation_y.sin(), 0.0, camera_controller.rotation_y.cos());
+                look_at_transform.look_at(direction, Vec3::Y);
+            }
         }
     }
 }
