@@ -122,16 +122,30 @@ pub fn keyboard_input(
 ) {
     if keys.pressed(KeyCode::W) {
         if let Ok(camera_controller) = camera_query.get_single() {
-            if let Ok(mut look_at_transform) = entity_position_query.get_mut(camera_controller.lock_entity) {
-                let direction = look_at_transform.translation + Vec3::new(camera_controller.rotation_y.sin(), 0.0, camera_controller.rotation_y.cos());
+            if let Ok(mut look_at_transform) =
+                entity_position_query.get_mut(camera_controller.lock_entity)
+            {
+                let direction = look_at_transform.translation
+                    + Vec3::new(
+                        camera_controller.rotation_y.sin(),
+                        0.0,
+                        camera_controller.rotation_y.cos(),
+                    );
                 look_at_transform.look_at(direction, Vec3::Y);
             }
         }
     }
     if keys.pressed(KeyCode::S) {
         if let Ok(camera_controller) = camera_query.get_single() {
-            if let Ok(mut look_at_transform) = entity_position_query.get_mut(camera_controller.lock_entity) {
-                let direction = look_at_transform.translation - Vec3::new(camera_controller.rotation_y.sin(), 0.0, camera_controller.rotation_y.cos());
+            if let Ok(mut look_at_transform) =
+                entity_position_query.get_mut(camera_controller.lock_entity)
+            {
+                let direction = look_at_transform.translation
+                    - Vec3::new(
+                        camera_controller.rotation_y.sin(),
+                        0.0,
+                        camera_controller.rotation_y.cos(),
+                    );
                 look_at_transform.look_at(direction, Vec3::Y);
             }
         }
